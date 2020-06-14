@@ -37,7 +37,7 @@ navbarPage(
     class = "outer",
     bootstrapPage(
       div(DT::dataTableOutput("rawDataTable"),
-          style = "height: 100%; padding: 15px; overflow-y: scroll;"
+          style = "height: 100%; padding: 15px; overflow-y: auto;"
       )
     )
   ), 
@@ -46,7 +46,7 @@ navbarPage(
     class = "outer",
     bootstrapPage(
       div(DT::dataTableOutput("processedDataTable"),
-          style = "height: 100%; padding: 15px; overflow-y: scroll;"
+          style = "height: 100%; padding: 15px; overflow-y: auto;"
       )
     )
   ),
@@ -54,19 +54,30 @@ navbarPage(
     "Forum Post Analysis",
     class = "outer",
     bootstrapPage(
-      textInput("topicUrl", 'Topic URL (lowyat.net) only : ', value = 'https://forum.lowyat.net/topic/4001664', width = NULL,
-                placeholder = NULL),
-      
-      numericInput("lastPost", 'Last Post # : ', 100, min = 10, max = 1000, step = 20,
-                   width = NULL),
-      submitButton('Submit'),
-      
-      # display the Topic Title here.
-      # TODO : proper alignment so that look nicer
-      textOutput("topicTitle"),
-      
-      # render the wordcloud2 here.
-      wordcloud2::wordcloud2Output('wc2')
+      div(
+        style = "height: 100%; padding: 15px; overflow-y: auto",
+        
+        # Input wrapper
+        div(
+          textInput("topicUrl", 'Topic URL (lowyat.net) only : ', value = 'https://forum.lowyat.net/topic/4001664', width = NULL,
+                    placeholder = NULL),
+          
+          numericInput("lastPost", 'Last Post # : ', 100, min = 10, max = 1000, step = 20,
+                       width = NULL),
+          submitButton('Submit')
+        ),
+
+        # Output wrapper
+        div(
+          style = "margin-top: 30px;",
+          
+          # display the Topic Title here.
+          h2(textOutput("topicTitle"), style = "text-align: center; margin-bottom: 15px;"),
+          
+          # render the wordcloud2 here.
+          wordcloud2::wordcloud2Output('wc2')
+        )
+      )
     )
   )
   
