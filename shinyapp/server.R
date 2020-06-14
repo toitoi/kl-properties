@@ -62,7 +62,7 @@ function(input, output, session) {
                         # display by the price first...
                         # TODO : then we move to display the psf
                         # TODO : maybe interactive recalculate by select option prop_price or psf
-                        label = paste(g_areaList, " : ", getPrefix() , updateLeaflet()),
+                        label = paste(g_areaList, " : ", getPrefix() , updateLeaflet(), getSuffix()),
                         color = qpal(rescale(
                                         x = updateLeafletScale(),
                                         to = c(0, g_max_price_range), 
