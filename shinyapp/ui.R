@@ -35,26 +35,24 @@ navbarPage(
   tabPanel(
     "Raw Data",
     class = "outer",
-    # TODO : fix the css, so that scrollable when displaying more rows.
-    tags$head(tags$style( type = 'text/css',  'table { overflow-y: scroll; height: 500px; }')),
     bootstrapPage(
-      DT::dataTableOutput("rawDataTable")
+      div(DT::dataTableOutput("rawDataTable"),
+          style = "height: 100%; padding: 15px; overflow-y: scroll;"
+      )
     )
   ), 
   tabPanel(
     "Processed Data",
     class = "outer",
-    # TODO : fix the css, so that scrollable when displaying more rows.
-    tags$head(tags$style( type = 'text/css',  'table { overflow-y: scroll; height: 500px; }')),
     bootstrapPage(
-      DT::dataTableOutput("processedDataTable")
+      div(DT::dataTableOutput("processedDataTable"),
+          style = "height: 100%; padding: 15px; overflow-y: scroll;"
+      )
     )
   ),
   tabPanel(
     "Forum Post Analysis",
     class = "outer",
-    # TODO : fix the css, so that scrollable when displaying more rows.
-    tags$head(tags$style( type = 'text/css',  'table { overflow-y: scroll; height: 500px; }')),
     bootstrapPage(
       textInput("topicUrl", 'Topic URL (lowyat.net) only : ', value = 'https://forum.lowyat.net/topic/4001664', width = NULL,
                 placeholder = NULL),
