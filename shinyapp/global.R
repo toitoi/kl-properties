@@ -11,7 +11,7 @@ c_geojsonPath <- "data/09-WPKL-New-DM-4326.geojson"
 c_propDataPath <- "data/properties.csv"
 
 # for the ui link
-proptalkURL <- a("Find Topic Here!!", href="https://forum.lowyat.net/PropertyTalk")
+proptalkURL <- a("Find Topic Here!!", href="https://forum.lowyat.net/PropertyTalk", target="_blank")
 
 # define the constant here
 g_option_view <- c("Property price"="Price", "Per square feet"="Psf")
@@ -21,11 +21,11 @@ g_topic_title <- 'Please enter a link'
 
 # read the geojson as "SpatialPolygonsDataFrame"
 g_geojson <- geojson_read(c_geojsonPath, what = "sp")
-class(g_geojson)
-colnames(g_geojson)
+#class(g_geojson)
+#colnames(g_geojson)
 g_areaList <- g_geojson$NAMA_DM
-class(g_areaList)
-colnames(g_areaList)
+#class(g_areaList)
+#colnames(g_areaList)
 
 # mapping the area name according to geojson
 g_area_df <- data.frame("LocationGroup" = g_areaList)
@@ -34,10 +34,10 @@ g_area_df <- data.frame("LocationGroup" = g_areaList)
 # Import the data
 g_oriPropData <- read.csv(file = c_propDataPath)
 propData <- g_oriPropData
-  str(propData)
+  #str(propData)
   # look at the first six rows
-  head(propData)
-  class(propData) # it is dataframe
+  #head(propData)
+  #class(propData) # it is dataframe
   # create a new area grouping
   propData$LocationGroup <- propData$Location 
   # add the new column to the dataframe
@@ -226,20 +226,20 @@ propData <- g_oriPropData
   
   
   # check the locationGroup that has not been mapped
-  notMapData <- propData$LocationGroup[-which(propData$LocationGroup %in% g_area_df$LocationGroup)]
+  #notMapData <- propData$LocationGroup[-which(propData$LocationGroup %in% g_area_df$LocationGroup)]
   #notMapData
   
   # show the row without price
-  propData[-which(propData$Price == ""), ]
+  #propData[-which(propData$Price == ""), ]
   # show the na size
-  propData[which(is.na(propData$Size)), ]
+  #propData[which(is.na(propData$Size)), ]
   # remove the row without price
   propData <- propData[!(is.na(propData$Price) | propData$Price==""), ]
   propData <- propData[!(is.na(propData$Size) | propData$Size==""), ]
 
   # clean up the price
   # format the price
-  class(propData$Price)
+  #class(propData$Price)
   propData$Price <- str_replace_all(
     propData$Price, # column we want to search
     pattern = ',', # what to find
@@ -251,7 +251,7 @@ propData <- g_oriPropData
     replacement = '' # what to replace it with
   )
   # check if there na 
-  propData$Price[is.na(propData$Price)]
+  #propData$Price[is.na(propData$Price)]
   # remove na price
   propData <- propData[!(is.na(propData$Price) | propData$Price==""), ]
   # convert to numeric
@@ -263,7 +263,7 @@ propData <- g_oriPropData
   # clean up the psf
   # TODO : alot noise here... 
   # 20 x 80, 850sf~1000sf, 
-  head(propData)
+  #head(propData)
   propData$Size <- str_replace_all(
     propData$Size,
     pattern = 'Built-up : ',
@@ -285,7 +285,7 @@ propData <- g_oriPropData
     replacement = ''
   )
   # check if there na 
-  propData$Size[is.na(propData$Size)]
+  #propData$Size[is.na(propData$Size)]
   # remove the row without size
   propData <- propData[!(is.na(propData$Size) | propData$Size==""), ]
   propData$Size <- as.numeric(propData$Size)
@@ -294,33 +294,34 @@ propData <- g_oriPropData
   propData <- propData[propData$Size > 300,]
   propData <- propData[propData$Size < 5000,]
   
-  # check property type
+  # reset row and order
   propData <- propData[!is.na(propData$Location),]
+  propData <-propData[order(propData$Price),]
   row.names(propData) <- NULL
   
   # show the names of the dataframe
-  colnames(propData)
+  #colnames(propData)
   
   
   
 # take the "Price" and "LocationGroup"
 propPriceData <- propData %>% select(-Location, -Rooms, -Bathrooms, -Furnishing, -Car.Parks, -Property.Type)
   # check the new dataframe
-  head(propPriceData)
-  colnames(propPriceData)
-  class(propPriceData$Price) # the price is character
+  #head(propPriceData)
+  #colnames(propPriceData)
+  #class(propPriceData$Price) # the price is character
   
   
 # grouping the same LocationGroup
 groupedPropData <- ddply(propPriceData, .(LocationGroup), summarize,  MeanPrice=mean(Price), MeanSize=mean(Size, na.rm=T))
-class(groupedPropData)
+#class(groupedPropData)
 
 
 areaPriceData <- left_join(g_area_df, groupedPropData, by="LocationGroup")
 # calculate the psf
 areaPriceData$psf <- areaPriceData$MeanPrice / areaPriceData$MeanSize
 
-class(areaPriceData)
-head(areaPriceData)
+#class(areaPriceData)
+#head(areaPriceData)
 # TODO : fill up the empty area with the same group
 # TODO : how to copy row to the same area
