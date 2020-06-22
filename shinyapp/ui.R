@@ -30,11 +30,6 @@ navbarPage(
             "PropSight is your virtual property surveyor that helps you to ",
             "find the property of your dreams ",
             icon("heart", class="text-danger", lib = "font-awesome")
-          ),
-          actionButton(
-            "get_started",
-            "Get Started",
-            class="btn btn-primary btn-lg",
           )
         ),
         
@@ -52,7 +47,41 @@ navbarPage(
   ),
   
   tabPanel(
-    "Interactive Map",
+    "Get Started",
+    class = "container",
+    bootstrapPage(
+      sidebarLayout(
+        sidebarPanel(
+          titlePanel("Who should use this app?"),
+          tags$ol(
+            tags$li("First time home buyers looking for potential property units"), 
+            tags$li("Property investors looking for area with high-yield returns"), 
+            tags$li("Property developers scouting for new strategic areas of development")
+          ),
+          class = "bg-success"
+        ),
+        mainPanel(
+          tags$h2("How to use this app?"),
+          tags$ol(
+            tags$li("Click the Screening Map tab"), 
+            tags$li("Choose to view areas either by Property Price or Per Square Fee (psq)"),
+            tags$li("The map will show area heat map based on the selected option"),
+            tags$li("Hover your web cursor on the area of interest to see more details"),
+            tags$li("Hover your web cursor to the stacks icon on top right of the map to select any Point of Interests (POIs)"),
+            tags$li("Once the POIs legends are selected, it'll show additional markers on the map"),
+            tags$li("To further see the sentiment of a particular area, the user can click Property Insight tab"),
+            tags$li("In the Property Insight page, the user can key in the lowyat.net topic ID for analysis"),
+            tags$li("The lowyat.net topic ID represents a forum discussion specific for that a particular area e.g Sentul Village ID is 4001664"),
+            tags$li("The system would then crawl the forum site and gather the sentiments of the discussion and create a wordcloud to the user the see"),
+            tags$li("Based on all of these information, the user would be able to make a preliminary decision on which area is of interest to him/her"),
+          )
+        )
+      )
+    )
+  ), 
+  
+  tabPanel(
+    "Screening Map",
     div(
       class = "outer",
       tags$head(
@@ -84,39 +113,40 @@ navbarPage(
       )
     )
   ), 
+  
   tabPanel(
-    "User Guide",
-    class = "container",
+    "Property Insight",
+    class = "outer",
     bootstrapPage(
-      sidebarLayout(
-        sidebarPanel(
-          titlePanel("Who should use this app?"),
-          tags$ol(
-            tags$li("First time home buyers looking for potential property units"), 
-            tags$li("Property investors looking for area with high-yield returns"), 
-            tags$li("Property developers scouting for new strategic areas of development")
-          ),
-          class = "bg-success"
+      div(
+        style = "height: 100%; padding: 15px; overflow-y: auto",
+        
+        # Input wrapper
+        div(
+          proptalkURL,
+          textInput("topicUrl", 'Choose a Topic URL : ', value = '', width = NULL,
+                    placeholder = NULL),
+          
+          numericInput("lastPost", 'Last Post # : ', 100, min = 10, max = 1000, step = 20,
+                       width = NULL),
+          submitButton('Submit')
         ),
-        mainPanel(
-          tags$h2("How to use this app?"),
-          tags$ol(
-            tags$li("Click the Interactive Map tab"), 
-            tags$li("Choose to view areas either by Property Price or Per Square Fee (psq)"),
-            tags$li("The map will show area heat map based on the selected option"),
-            tags$li("Hover your web cursor on the area of interest to see more details"),
-            tags$li("Hover your web cursor to the stacks icon on top right of the map to select any Point of Interests (POIs)"),
-            tags$li("Once the POIs legends are selected, it'll show additional markers on the map"),
-            tags$li("To further see the sentiment of a particular area, the user can click Forum Post Analysis tab"),
-            tags$li("In the Forum Post Analysis page, the user can key in the lowyat.net topic ID for analysis"),
-            tags$li("The lowyat.net topic ID represents a forum discussion specific for that a particular area e.g Sentul Village ID is 4001664"),
-            tags$li("The system would then crawl the forum site and gather the sentiments of the discussion and create a wordcloud to the user the see"),
-            tags$li("Based on all of these information, the user would be able to make a preliminary decision on which area is of interest to him/her"),
-          )
+        
+        # Output wrapper
+        div(
+          style = "margin-top: 30px;",
+          
+          
+          # display the Topic Title here.
+          h2(textOutput("topicTitle"), style = "text-align: center; margin-bottom: 15px;"),
+          
+          # render the wordcloud2 here.
+          wordcloud2::wordcloud2Output('wc2')
         )
       )
     )
-  ), 
+  ),
+
   tabPanel(
     "Raw Data",
     class = "outer",
@@ -137,38 +167,7 @@ navbarPage(
       )
     )
   ),
-  tabPanel(
-    "Forum Post Analysis",
-    class = "outer",
-    bootstrapPage(
-      div(
-        style = "height: 100%; padding: 15px; overflow-y: auto",
-        
-        # Input wrapper
-        div(
-          proptalkURL,
-          textInput("topicUrl", 'Choose a Topic URL : ', value = '', width = NULL,
-                placeholder = NULL),
-      
-          numericInput("lastPost", 'Last Post # : ', 100, min = 10, max = 1000, step = 20,
-                   width = NULL),
-          submitButton('Submit')
-        ),
-      
-        # Output wrapper
-        div(
-          style = "margin-top: 30px;",
-          
-        
-          # display the Topic Title here.
-          h2(textOutput("topicTitle"), style = "text-align: center; margin-bottom: 15px;"),
-      
-          # render the wordcloud2 here.
-          wordcloud2::wordcloud2Output('wc2')
-        )
-      )
-    )
-  ),
+
   tabPanel(
     "About Project",
     class = "container",
